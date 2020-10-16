@@ -15,6 +15,13 @@ trap 'kill $(jobs -p)' exit
 # Global directory paths
 DATABASE_DIR="miniban.db"
 
+# Confirming booted script to not confuse user
+echo ""
+echo ""Running miniban.sh"
+echo ""
+sleep 1
+echo "Listening for SSH connections..."
+
 
 # Step 1: Remove all IP addresses that have been BANNED for more than 10 minutes
 
@@ -26,7 +33,7 @@ done &
 
 
 journalctl -f -u ssh -n 0 | grep Failed --line-buffered | grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+" --line-buffered | while read IP; do
-	IP_ADDRESS=$(echo "$IP") ############## This can maybe be deleted
+	IP_ADDRESS="$IP"
 
 	# Step 2: Read BANNED IP addresses from database
 
@@ -72,9 +79,10 @@ journalctl -f -u ssh -n 0 | grep Failed --line-buffered | grep -o "[0-9]\+\.[0-9
 		fi
 
 		if [[ ${IPs["$IP_ADDRESS"]} -ge 3 ]]; then
-			echo "$IP is not yet able to escape JAIL"
+			echo "$IP: JAILBREAK unsuccessful. Need more time"
 			IPs["$IP_ADDRESS"]=$(( IPs["$IP_ADDRESS"] * 0))
 		fi
+	
 	else # Step 3B: If the IP address is allready in the database of BANNED IPs
 
 		# Step 4B: Echo to user that the IP is allready BANNED
