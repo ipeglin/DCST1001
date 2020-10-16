@@ -28,7 +28,7 @@ echo "Listening for SSH connections..."
 # Subprocess running every 10 seconds
 while true; do
 	./unban.sh # Running unban.sh
-	sleep 30
+	sleep 2
 done &
 
 
