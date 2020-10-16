@@ -13,7 +13,7 @@ declare -A IPs
 trap 'kill $(jobs -p)' exit
 
 # Global directory paths
-DATABASE_DIR=$(echo "/usr/local/bin/miniban.db")
+DATABASE_DIR="miniban.db"
 
 
 # Step 1: Remove all IP addresses that have been BANNED for more than 10 minutes
@@ -21,7 +21,7 @@ DATABASE_DIR=$(echo "/usr/local/bin/miniban.db")
 # Subprocess running every 10 seconds
 while true; do
 	./unban.sh # Running unban.sh
-	sleep 3
+	sleep 30
 done &
 
 

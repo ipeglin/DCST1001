@@ -2,7 +2,7 @@
 
 IP_ADDRESS="$1"
 TIMESTAMP=$(date +%s)
-DATABASE_DIR="/usr/local/bin/miniban.db"
+DATABASE_DIR="miniban.db"
 
 
 # Check if the IP_ADDRESS is an empty string
@@ -22,7 +22,7 @@ if [ $IP_ADDRESS != "PutYourIpAddressHere" ]; then
 
 # isInRules=$(iptables -S INPUT | cut -d ' ' -f4 | cut -d "/" -f1 | grep -c "$IP_ADDRESS")
 isInDatabase=$(cat $DATABASE_DIR | grep -c "$IP_ADDRESS")
-# echo "$isInDatabase"
+echo "$isInDatabase"
 if [ $isInDatabase -eq 0 ]; then
 	isInRules=$(iptables -S INPUT | cut -d " " -f4 | cut -d "/" -f1 | grep -c "$IP_ADDRESS")
 	if [ $isInRules -eq 1 ]; then
@@ -37,12 +37,21 @@ if [ $isInDatabase -eq 0 ]; then
 			BANNED_IP=$(echo "$line" | cut -d ' ' -f16)
 			re='^[0-9]+$'
 			if [[ "$LINE_NUMBER" =~ $re ]]; then
-
+				echo ""
+				echo "## Checkpoint 1 ##"
+				echo ""
 				# Check if the IP address is on the iptables line
-				if [[ "$line" == *"$IP_ADDRESS"* ]]; then
+
+				IPSTATUS_LINE_NUMBER="$LINE_NUMBER"
+				isInIptablesStatus=$(iptables -S INPUT | cut -d " " -f4 | cut -d "/" -f1 | grep -c "$IP_ADDRESS")
+				echo "Is the IP in iptables -S ?  => $isInIptablesStatus"
+				if [ $isInIptablesStatus -eq 1 ]; then
+					echo "## Checkpoint: TRUE ##"
 					echo "Rule located on line nr. $LINE_NUMBER"
 					echo "Changing policy to REJECT..."
 					iptables -R INPUT "$LINE_NUMBER" -s "$IP_ADDRESS" -j REJECT
+				else
+					echo "## Checkpoint: FALSE ##"
 				fi
 			else
 				# echo "error: Not a number" >&2
