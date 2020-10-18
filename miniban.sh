@@ -17,7 +17,7 @@ DATABASE_DIR="miniban.db"
 
 # Confirming booted script to not confuse user
 echo ""
-echo ""Running miniban.sh"
+echo "Running miniban.sh"
 echo ""
 sleep 1
 echo "Listening for SSH connections..."
@@ -62,6 +62,7 @@ journalctl -f -u ssh -n 0 | grep Failed --line-buffered | grep -o "[0-9]\+\.[0-9
 		# Step 5A: Add IP and TIMESTAMP to BANNED addresses when 3 tries have been made
 
 		if [[ ${IPs["$IP_ADDRESS"]} -eq 3 ]]; then
+			echo ""
 			echo "----------------------------------------"
 			echo "Current Ban State: $IS_BANNED"
 			echo ""
@@ -76,22 +77,27 @@ journalctl -f -u ssh -n 0 | grep Failed --line-buffered | grep -o "[0-9]\+\.[0-9
 			echo ""
 			echo ""
 			echo "----------------------------------------"
+			echo ""
 		fi
 
 		if [[ ${IPs["$IP_ADDRESS"]} -ge 3 ]]; then
+			echo ""
 			echo "$IP: JAILBREAK unsuccessful. Need more time"
+			echo ""
 			IPs["$IP_ADDRESS"]=$(( IPs["$IP_ADDRESS"] * 0))
 		fi
-	
+
 	else # Step 3B: If the IP address is allready in the database of BANNED IPs
 
 		# Step 4B: Echo to user that the IP is allready BANNED
 
+		echo ""
 		echo "-----------------------------------"
 		echo ""
 		echo "Current status of IP is allready set to BANNED"
 		echo "BANNED IP: $IP"
 		echo ""
 		echo "-----------------------------------"
+		echo ""
 	fi
 done
