@@ -9,7 +9,7 @@ NOW=$(date +%s)
 AVAILABLE_UNBANS=true
 
 # Setting the time a IP address should be rejected
-JAILTIME=30 # STD set to 600 = 10 minutes
+JAILTIME=600 # STD set to 600 = 10 minutes
 
 
 # Read every line one by one from miniban.db
